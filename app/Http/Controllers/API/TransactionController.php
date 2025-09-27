@@ -13,20 +13,42 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $type = $request->query('type'); // "sent", "received"
 
-        $transactions = Transaction::with(['sender:id,name,email','receiver:id,name,email'])
-            ->where(function($q) use ($user) {
+        $query = Transaction::with(['sender:id,name,email','receiver:id,name,email'])
+            ->where(function($q) use ($user, $type) {
+                if ($type === 'sent') {
+                    $q->where('sender_id', $user->id);
+                } elseif ($type === 'received') {
+                    $q->where('receiver_id', $user->id);
+                } else {
+                    $q->where('sender_id', $user->id)
+                    ->orWhere('receiver_id', $user->id);
+                }
+            })
+            ->orderByDesc('created_at');
+
+        $transactions = $query->paginate(10);
+
+        $totalTransactions = Transaction::where(function($q) use ($user) {
                 $q->where('sender_id', $user->id)
                 ->orWhere('receiver_id', $user->id);
-            })
-            ->orderByDesc('created_at')
-            ->paginate(10);
+            })->count();
+
+        $totalCommission = Transaction::where('sender_id', $user->id)
+            ->sum('commission_fee');
 
         return response()->json([
             'balance' => $user->balance,
             'transactions' => $transactions,
+            'stats' => [
+                'totalTransactions' => $totalTransactions,
+                'totalCommission' => $totalCommission,
+            ],
         ]);
     }
+
+
 
     public function store(Request $request)
     {

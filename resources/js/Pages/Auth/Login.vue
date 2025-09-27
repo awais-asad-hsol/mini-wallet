@@ -1,28 +1,3 @@
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import api from '../../api';
-import { useAuth } from '../../stores/auth'
-const { setAuth } = useAuth()
-
-const email = ref('');
-const password = ref('');
-const errors = ref(null);
-const router = useRouter();
-
-const submit = async () => {
-
-    errors.value = null;
-    try {
-        const res = await api.post('/login', { email: email.value, password: password.value });
-        setAuth(res.data.token, res.data.user)
-        router.push('/dashboard');
-    } catch (e) {
-        errors.value = e.response?.data?.errors ?? { general: ['Login failed'] };
-    }
-};
-</script>
-
 <template>
   <div class="row justify-content-center">
     <div class="col-md-6">
@@ -49,3 +24,26 @@ const submit = async () => {
     </div>
   </div>
 </template>
+<script setup>
+  import { ref } from 'vue';
+  import { useRouter } from 'vue-router';
+  import api from '../../api';
+  import { useAuth } from '../../stores/auth'
+  const { setAuth } = useAuth()
+
+  const email = ref('');
+  const password = ref('');
+  const errors = ref(null);
+  const router = useRouter();
+
+  const submit = async () => {
+    errors.value = null;
+    try {
+        const res = await api.post('/login', { email: email.value, password: password.value });
+        setAuth(res.data.token, res.data.user)
+        router.push('/dashboard');
+    } catch (e) {
+        errors.value = e.response?.data?.errors ?? { general: ['Login failed'] };
+    }
+  };
+</script>
