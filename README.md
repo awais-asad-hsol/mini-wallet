@@ -56,7 +56,7 @@ This project demonstrates **secure authentication, money transfers, real-time up
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/mini-wallet.git
+git clone https://github.com/awais-asad-hsol/mini-wallet
 cd mini-wallet
 
 ### 2. Install Backend Dependencies
