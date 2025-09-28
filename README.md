@@ -60,17 +60,15 @@ git clone https://github.com/awais-asad-hsol/mini-wallet
 cd mini-wallet
 
 ### 2. Install Backend Dependencies
-```bash
 composer install
 
 
 ### 3. Install Frontend Dependencies
-```bash
 npm install
 
 
 ### 4. Configure Environment
-```bash
+
 cp .env.example .env
 
 # Open the .env file and update your DB and Pusher credentials:
@@ -95,7 +93,6 @@ cp .env.example .env
 
 
 ### 5. Run Migrations & Seeders
-```bash
 
 php artisan migrate --seed
 
@@ -104,7 +101,7 @@ php artisan migrate --seed
 # User2 → user2@example.com / password / Balance: 500.00
 
 ### 6. Run the Application
-```bash
+
 
 php artisan serve
 npm run dev
