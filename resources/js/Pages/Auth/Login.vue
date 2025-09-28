@@ -28,7 +28,8 @@
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
   import api from '../../api';
-  import { useAuth } from '../../stores/auth'
+  import { useAuth } from '../../stores/auth';
+  import { initTransactionRealtime } from '../../services/transaction'
   const { setAuth } = useAuth()
 
   const email = ref('');
@@ -39,11 +40,14 @@
   const submit = async () => {
     errors.value = null;
     try {
-        const res = await api.post('/login', { email: email.value, password: password.value });
-        setAuth(res.data.token, res.data.user)
-        router.push('/dashboard');
+      const res = await api.post('/login', { email: email.value, password: password.value });
+      setAuth(res.data.token, res.data.user);
+
+      initTransactionRealtime(); 
+      router.push('/dashboard');
     } catch (e) {
-        errors.value = e.response?.data?.errors ?? { general: ['Login failed'] };
+      errors.value = e.response?.data?.errors ?? { general: ['Login failed'] };
     }
   };
+
 </script>

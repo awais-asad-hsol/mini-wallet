@@ -87,14 +87,14 @@
     const { clearAuth } = useAuth()
 
     const logout = async () => {
-    try {
-        await api.post('/logout')
-    } catch (e) {
-    
-    } finally {
-        clearAuth()
-        router.push('/login')
-    }
+        try {
+            await api.post('/logout')
+        } catch (e) {
+        
+        } finally {
+            clearAuth()
+            router.push('/login')
+        }
     }
 
 </script>

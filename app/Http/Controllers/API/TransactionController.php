@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Events\TransactionCreated;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
@@ -88,11 +90,16 @@ class TransactionController extends Controller
                 'status' => 'completed',
             ]);
 
+            $tx->load(['sender:id,name,email', 'receiver:id,name,email']);
+            broadcast(new TransactionCreated($tx))->toOthers();
+            Log::info('Broadcast fired for transaction', ['id' => $tx->id]);
+
             return response()->json([
                 'message' => 'Transfer successful',
                 'balance' => $sender->balance,
-                'transaction' => $tx,
+                'transaction' => $tx->load(['sender:id,name,email', 'receiver:id,name,email']),
             ], 200);
+            
         });
     }
 

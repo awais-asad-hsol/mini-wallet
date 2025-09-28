@@ -39,21 +39,21 @@
     const errors = ref(null)
 
     const submit = async () => {
-    message.value = null
-    errors.value = null
-    try {
-        const res = await api.post('/transactions', {
-        receiver_id: receiver_id.value,
-        amount: amount.value,
-        })
-        message.value = res.data.message
-        setTimeout(() => router.push('/transactions/sent'), 1000)
-    } catch (e) {
-        if (e.response?.data?.errors) {
-        errors.value = e.response.data.errors
-        } else {
-        errors.value = { general: [e.response?.data?.error || 'Transaction failed'] }
+        message.value = null
+        errors.value = null
+        try {
+            const res = await api.post('/transactions', {
+            receiver_id: receiver_id.value,
+            amount: amount.value,
+            })
+            message.value = res.data.message
+            setTimeout(() => router.push('/transactions/sent'), 1000)
+        } catch (e) {
+            if (e.response?.data?.errors) {
+            errors.value = e.response.data.errors
+            } else {
+            errors.value = { general: [e.response?.data?.error || 'Transaction failed'] }
+            }
         }
-    }
     }
 </script>

@@ -1,6 +1,6 @@
+```vue
 <template>
   <div>
-    <!-- 👤 User Details Card -->
     <div class="card mb-4 shadow-sm">
       <div class="card-body">
         <h4 class="mb-3">Welcome, {{ user?.name }}</h4>
@@ -8,9 +8,7 @@
         <p><strong>Joined:</strong> {{ new Date(user?.created_at).toLocaleDateString() }}</p>
       </div>
     </div>
-
-    <!-- Stats Cards -->
-    <div class="row">
+    <div class="row mb-4">
       <div class="col-md-4">
         <div class="card text-bg-primary shadow-sm">
           <div class="card-body">
@@ -42,22 +40,18 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue'
-  import api from '../../api'
+  import { onMounted } from 'vue'
   import { useAuth } from '../../stores/auth'
+  import { useTransactions } from '../../stores/transactions'
+  import { fetchTransactions, initTransactionRealtime } from '../../services/transaction.js'
+
 
   const { user } = useAuth()
 
-  const balance = ref(null)
-  const stats = ref({ totalTransactions: 0, totalCommission: 0 })
+  const { list, balance, stats } = useTransactions()
 
   onMounted(async () => {
-    try {
-      const res = await api.get('/transactions')
-      balance.value = res.data.balance
-      stats.value = res.data.stats
-    } catch (e) {
-      console.error(e)
-    }
+    await fetchTransactions();
+    initTransactionRealtime() ;
   })
 </script>
